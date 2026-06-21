@@ -21,19 +21,30 @@
 
 html {
   scroll-behavior: smooth;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
-  min-width: 360px;
+  min-width: 0;
+  max-width: 100%;
   color: var(--ink);
   background: var(--paper);
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.6;
+  overflow-x: clip;
 }
 
 body.drawer-open {
   overflow: hidden;
+}
+
+@supports not (overflow: clip) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
 }
 
 img {
@@ -579,30 +590,39 @@ button.btn::after,
   position: fixed;
   inset: 0;
   z-index: 100;
+  display: none;
   background: rgba(0, 0, 0, 0.54);
   opacity: 0;
   visibility: hidden;
+  overflow: hidden;
+  pointer-events: none;
+  contain: layout paint;
   transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
 .mobile-drawer.is-open {
+  display: block;
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 .mobile-drawer-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
   width: min(420px, 88vw);
   height: 100%;
-  margin-left: auto;
   padding: 20px;
   overflow-y: auto;
   background: var(--paper);
-  transform: translateX(100%);
+  transform: translate3d(100%, 0, 0);
   transition: transform 0.32s ease;
+  will-change: transform;
 }
 
 .mobile-drawer.is-open .mobile-drawer-panel {
-  transform: translateX(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .mobile-drawer-head {
@@ -612,7 +632,7 @@ button.btn::after,
   margin-bottom: 18px;
 }
 
-.mobile-drawer-panel > a,
+.mobile-drawer-panel > a:not(.btn):not(.mobile-contact),
 .mobile-accordion,
 .mobile-contact {
   width: 100%;
@@ -627,6 +647,42 @@ button.btn::after,
   color: var(--ink);
   font-weight: 850;
   text-align: left;
+}
+
+.mobile-drawer-panel > .btn {
+  width: 100%;
+  min-height: 46px;
+  justify-content: center;
+  margin: 14px 0 4px;
+  padding: 13px 16px;
+  border-radius: 6px;
+  font-size: clamp(0.88rem, 3.9vw, 0.98rem);
+  line-height: 1.12;
+  text-align: center;
+}
+
+.mobile-drawer-panel > .btn[href]::after {
+  flex: 0 0 auto;
+}
+
+.mobile-contact {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  justify-content: stretch;
+  gap: 14px;
+  padding: 15px 0;
+}
+
+.mobile-contact svg {
+  width: 22px;
+  height: 22px;
+  color: var(--green-dark);
+}
+
+.mobile-contact span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: right;
 }
 
 .mobile-service-list {
@@ -647,6 +703,14 @@ button.btn::after,
   padding: 11px 0 11px 18px;
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+.mobile-service-list .mobile-all-services {
+  margin-top: 4px;
+  padding-top: 13px;
+  color: var(--green-dark);
+  font-weight: 900;
+  border-top: 1px solid var(--line);
 }
 
 .hero {
@@ -1168,6 +1232,7 @@ button.btn::after,
 
 .service-carousel-wrap {
   overflow: hidden;
+  position: relative;
 }
 
 .service-carousel {
@@ -1775,6 +1840,23 @@ details p {
   margin-top: 26px;
 }
 
+.legal-content h3 {
+  margin: 22px 0 8px;
+  color: var(--green-dark);
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+
+.legal-content ul {
+  margin: 10px 0 20px;
+  padding-left: 22px;
+}
+
+.legal-content li {
+  margin: 8px 0;
+  color: var(--ink-2);
+}
+
 .site-footer {
   color: #fff;
   background: var(--ink);
@@ -2364,6 +2446,15 @@ details p {
     height: 43px;
   }
 
+  .mobile-drawer-panel {
+    width: min(340px, calc(100vw - 20px));
+    padding: 18px 16px;
+  }
+
+  .mobile-drawer-head {
+    margin-bottom: 16px;
+  }
+
   .hero-actions,
   .form-grid {
     display: grid;
@@ -2377,6 +2468,11 @@ details p {
 
   .hero-content {
     padding-top: 14px;
+  }
+
+  .hero-bg {
+    animation: none;
+    transform: none;
   }
 
   .hero-actions {
@@ -2408,6 +2504,80 @@ details p {
     width: 100%;
   }
 
+  .service-carousel-head {
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .service-carousel-head .carousel-controls {
+    display: none;
+  }
+
+  .service-carousel-head h2 {
+    max-width: 320px;
+    font-size: clamp(1.65rem, 7.2vw, 2.15rem);
+    line-height: 1.05;
+  }
+
+  .service-carousel-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 8px;
+    width: 34px;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(247, 244, 237, 0), #f7f4ed);
+  }
+
+  .service-carousel {
+    width: 100%;
+    grid-auto-flow: column;
+    grid-auto-columns: calc(100% - 58px);
+    grid-template-columns: none;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+    scroll-padding-inline: 14px;
+    padding: 0 0 8px 14px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .service-slide {
+    scroll-snap-align: start;
+  }
+
+  .service-slide a {
+    grid-template-rows: 178px auto auto auto;
+  }
+
+  .service-slide span,
+  .service-slide h3,
+  .service-slide p {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+  .service-slide span {
+    margin-top: 15px;
+    font-size: 0.68rem;
+  }
+
+  .service-slide h3 {
+    margin-top: 6px;
+    margin-bottom: 7px;
+    font-size: 1.08rem;
+    line-height: 1.2;
+  }
+
+  .service-slide p {
+    margin-bottom: 17px;
+    font-size: 0.96rem;
+    line-height: 1.5;
+  }
+
   .footer-cta-team img {
     width: min(82vw, 330px);
   }
@@ -2429,8 +2599,18 @@ details p {
   }
 
   .experience-badge {
-    right: 12px;
-    bottom: 12px;
+    position: static;
+    width: 100%;
+    margin-top: 10px;
+    padding: 16px 18px;
+    display: grid;
+    gap: 6px;
+    border-radius: var(--radius);
+  }
+
+  .experience-badge strong {
+    font-size: 1.35rem;
+    line-height: 1.05;
   }
 
   .page-hero {
