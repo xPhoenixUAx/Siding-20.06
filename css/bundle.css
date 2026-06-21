@@ -332,22 +332,92 @@ button.btn::after,
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   font-weight: 950;
   letter-spacing: 0;
   white-space: nowrap;
+  color: var(--ink);
 }
 
 .brand-mark {
   display: inline-grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  color: #fff;
-  background: linear-gradient(135deg, var(--green-dark), var(--green));
-  box-shadow: inset 0 -4px 0 rgba(255, 255, 255, 0.08);
-  font-size: 0.95rem;
+  width: 58px;
+  height: 50px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.brand-mark svg {
+  width: 58px;
+  height: 50px;
+  display: block;
+  overflow: visible;
+}
+
+.logo-facade {
+  fill: #143f31;
+}
+
+.logo-side {
+  fill: #0d2f25;
+}
+
+.logo-roof {
+  fill: #e99a25;
+}
+
+.logo-trim,
+.logo-line {
+  fill: none;
+  stroke: #f7f2e7;
+  stroke-width: 3.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.95;
+}
+
+.logo-trim {
+  stroke: #f2c16d;
+  stroke-width: 3.2;
+  opacity: 1;
+}
+
+.brand-text,
+.brand [data-company-name] {
+  display: grid;
+  gap: 2px;
+  max-width: 178px;
+  color: var(--ink);
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.brand-name-main {
+  display: block;
+  font-size: 1.02rem;
+  font-weight: 950;
+  letter-spacing: 0.045em;
+}
+
+.brand-name-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: max-content;
+  color: var(--accent-strong);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.24em;
+  line-height: 1;
+}
+
+.brand-name-sub::before {
+  content: "";
+  width: 26px;
+  height: 2px;
+  background: currentColor;
 }
 
 .desktop-nav {
@@ -1179,9 +1249,13 @@ button.btn::after,
 
 .homeowner-layout {
   display: grid;
-  grid-template-columns: minmax(360px, 0.82fr) minmax(280px, 0.7fr) minmax(300px, 0.56fr);
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 0.7fr) minmax(0, 0.56fr);
   gap: clamp(24px, 4vw, 56px);
   align-items: center;
+}
+
+.homeowner-layout > * {
+  min-width: 0;
 }
 
 .homeowner-photo {
@@ -1215,6 +1289,7 @@ button.btn::after,
 
 .homeowner-notes {
   border-top: 1px solid rgba(23, 33, 29, 0.16);
+  min-width: 0;
 }
 
 .homeowner-notes p {
@@ -1949,6 +2024,15 @@ details p {
 
 .footer-brand {
   margin-bottom: 18px;
+  color: #fff;
+}
+
+.footer-brand [data-company-name] {
+  color: #fff;
+}
+
+.footer-brand .brand-name-sub {
+  color: var(--amber);
 }
 
 .footer-company-line {
@@ -2059,6 +2143,15 @@ details p {
 }
 
 @media (max-width: 1320px) {
+  .homeowner-layout {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .homeowner-notes {
+    grid-column: 2;
+  }
+
   .footer-cta-inner {
     grid-template-columns: minmax(340px, 0.8fr) minmax(460px, 1fr);
     gap: 20px clamp(30px, 4vw, 58px);
@@ -2154,6 +2247,10 @@ details p {
 
   .services-cycle-steps p {
     grid-template-columns: 110px 1fr;
+  }
+
+  .homeowner-notes {
+    grid-column: auto;
   }
 
   .services-cycle-image {
@@ -2258,8 +2355,13 @@ details p {
   }
 
   .brand-mark {
-    width: 42px;
-    height: 42px;
+    width: 50px;
+    height: 43px;
+  }
+
+  .brand-mark svg {
+    width: 50px;
+    height: 43px;
   }
 
   .hero-actions,

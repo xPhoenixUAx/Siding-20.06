@@ -16,6 +16,14 @@
 
   function hydrateConfigTargets(root = document) {
     const fullAddress = [config.addressLine1, config.addressLine2].filter(Boolean).join(", ");
+    const renderBrandWordmark = (el, name) => {
+      const parts = String(name || "").trim().split(/\s+/);
+      const descriptor = parts.length > 1 ? parts.pop() : "";
+      const primary = parts.join(" ") || name || "";
+      el.innerHTML = descriptor
+        ? `<span class="brand-name-main">${primary}</span><span class="brand-name-sub">${descriptor}</span>`
+        : `<span class="brand-name-main">${primary}</span>`;
+    };
     const values = {
       companyName: config.companyName,
       companyLegalName: config.companyLegalName,
@@ -39,6 +47,10 @@
 
     Object.entries(values).forEach(([key, value]) => {
       $$(`[data-${key.replace(/[A-Z]/g, m => "-" + m.toLowerCase())}]`, root).forEach((el) => {
+        if (key === "companyName" && el.closest(".brand")) {
+          renderBrandWordmark(el, value);
+          return;
+        }
         el.textContent = value || "";
       });
     });
