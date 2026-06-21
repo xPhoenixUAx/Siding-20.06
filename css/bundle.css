@@ -2147,29 +2147,97 @@ details p {
 
 .cookie-banner {
   position: fixed;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
+  left: 50%;
+  bottom: 22px;
   z-index: 80;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 16px;
-  border-radius: var(--radius);
-  background: #fff;
-  box-shadow: var(--shadow);
+  width: min(720px, calc(100vw - 36px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 22px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(24, 63, 49, 0.97), rgba(15, 27, 23, 0.98)),
+    var(--green-dark);
+  box-shadow:
+    0 24px 56px rgba(9, 18, 15, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  opacity: 0;
+  transform: translate(-50%, 14px);
+  visibility: hidden;
+  transition: opacity 0.28s ease, transform 0.28s ease, visibility 0.28s ease;
+}
+
+.cookie-banner.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  visibility: visible;
+}
+
+.cookie-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.cookie-eyebrow {
+  color: var(--amber);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.cookie-banner h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.05rem;
+  line-height: 1.12;
 }
 
 .cookie-banner p {
+  max-width: 500px;
   margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.9rem;
+  line-height: 1.48;
 }
 
-.cookie-banner div {
+.cookie-banner a {
+  width: max-content;
+  color: #ffd28a;
+  font-size: 0.86rem;
+  font-weight: 850;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.cookie-actions {
   display: flex;
+  align-items: center;
   gap: 10px;
+}
+
+.cookie-actions .btn {
+  min-height: 42px;
+  padding: 11px 15px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 0.82rem;
+  box-shadow: none;
+}
+
+.cookie-actions .btn-outline {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.cookie-actions .btn-primary {
+  box-shadow: 0 12px 22px rgba(216, 138, 37, 0.26);
 }
 
 .scroll-top {
@@ -2370,9 +2438,14 @@ details p {
   }
 
   .footer-cta-inner,
-  .footer-bottom .container,
-  .cookie-banner {
+  .footer-bottom .container {
     align-items: flex-start;
+  }
+
+  .cookie-banner {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 16px;
   }
 
   .footer-cta-inner {
@@ -2479,11 +2552,11 @@ details p {
     margin: 20px 0 22px;
   }
 
-  .cookie-banner div {
+  .cookie-actions {
     width: 100%;
   }
 
-  .cookie-banner .btn {
+  .cookie-actions .btn {
     flex: 1;
   }
 
@@ -2641,16 +2714,29 @@ details p {
   }
 
   .cookie-banner {
-    left: 12px;
-    right: 12px;
+    width: calc(100vw - 24px);
     bottom: 12px;
     gap: 12px;
     padding: 14px;
   }
 
-  .cookie-banner .btn {
+  .cookie-banner h2 {
+    font-size: 0.98rem;
+  }
+
+  .cookie-banner p {
+    font-size: 0.85rem;
+    line-height: 1.42;
+  }
+
+  .cookie-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cookie-actions .btn {
     min-height: 44px;
-    padding: 12px 14px;
+    padding: 12px 10px;
   }
 }
 

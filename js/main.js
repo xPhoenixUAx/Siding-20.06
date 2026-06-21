@@ -108,21 +108,34 @@
     if (localStorage.getItem(key)) return;
     const banner = document.createElement("div");
     banner.className = "cookie-banner";
+    banner.setAttribute("role", "dialog");
+    banner.setAttribute("aria-live", "polite");
+    banner.setAttribute("aria-label", "Cookie notice");
     banner.innerHTML = `
-      <p>We use essential cookies and basic analytics-style storage to improve this siding website. Read the <a href="${pathPrefix}cookie-policy.html">Cookie Policy</a>.</p>
-      <div>
-        <button class="btn btn-outline" type="button" data-cookie-decline>Decline</button>
-        <button class="btn btn-primary" type="button" data-cookie-accept>Accept</button>
+      <div class="cookie-copy">
+        <span class="cookie-eyebrow">Privacy choice</span>
+        <h2>Cookies that keep the site useful.</h2>
+        <p>We use essential cookies for site behavior and optional measurement to understand which siding pages help homeowners most.</p>
+        <a href="${pathPrefix}cookie-policy.html">Read Cookie Policy</a>
+      </div>
+      <div class="cookie-actions">
+        <button class="btn btn-outline" type="button" data-cookie-decline>Necessary only</button>
+        <button class="btn btn-primary" type="button" data-cookie-accept>Accept all</button>
       </div>
     `;
     document.body.append(banner);
+    requestAnimationFrame(() => banner.classList.add("is-visible"));
+    const dismiss = (choice) => {
+      localStorage.setItem(key, choice);
+      banner.classList.remove("is-visible");
+      banner.addEventListener("transitionend", () => banner.remove(), { once: true });
+      window.setTimeout(() => banner.remove(), 360);
+    };
     $("[data-cookie-accept]", banner).addEventListener("click", () => {
-      localStorage.setItem(key, "accepted");
-      banner.remove();
+      dismiss("accepted");
     });
     $("[data-cookie-decline]", banner).addEventListener("click", () => {
-      localStorage.setItem(key, "declined");
-      banner.remove();
+      dismiss("necessary");
     });
   }
 
