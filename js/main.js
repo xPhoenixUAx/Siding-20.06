@@ -103,6 +103,88 @@
     });
   }
 
+  function bindPageLoader() {
+    const loader = document.createElement("div");
+    loader.className = "page-loader is-active";
+    loader.setAttribute("aria-hidden", "true");
+    loader.innerHTML = `
+      <div class="loader-stack">
+        <div class="loader-house" aria-hidden="true">
+          <svg viewBox="0 0 132 112" focusable="false">
+            <path class="loader-house-shadow" d="M28 96h76"/>
+            <path class="loader-house-body" d="M34 96V48l32-24 32 24v48H34Z"/>
+            <path class="loader-house-side" d="M66 24 98 48v48H66V24Z"/>
+            <path class="loader-house-roof" d="M16 50 66 12l50 38-8 10-42-31-42 31-8-10Z"/>
+            <path class="loader-house-trim" d="M66 30v66M34 96h64"/>
+            <g class="loader-siding loader-siding-left">
+              <path d="M44 58h14"/>
+              <path d="M44 70h14"/>
+              <path d="M44 82h14"/>
+            </g>
+            <g class="loader-siding loader-siding-right">
+              <path d="M74 58h14"/>
+              <path d="M74 70h14"/>
+              <path d="M74 82h14"/>
+            </g>
+          </svg>
+        </div>
+        <div class="loader-sweep" aria-hidden="true">
+          <span></span>
+        </div>
+      </div>
+    `;
+    document.body.prepend(loader);
+
+    const hideLoader = () => {
+      window.setTimeout(() => loader.classList.remove("is-active", "is-leaving"), 260);
+    };
+
+    const showLoader = () => {
+      loader.classList.remove("is-leaving");
+      void loader.offsetWidth;
+      loader.classList.add("is-leaving", "is-active");
+    };
+
+    if (document.readyState === "complete") {
+      hideLoader();
+    } else {
+      window.addEventListener("load", hideLoader, { once: true });
+      window.setTimeout(hideLoader, 900);
+    }
+
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest("a[href]");
+      if (!link) return;
+      const href = link.getAttribute("href") || "";
+      if (
+        link.target ||
+        link.hasAttribute("download") ||
+        href.startsWith("#") ||
+        href.startsWith("mailto:") ||
+        href.startsWith("tel:") ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+
+      const url = new URL(link.href, window.location.href);
+      if (url.origin !== window.location.origin || url.href === window.location.href) return;
+
+      event.preventDefault();
+      showLoader();
+      window.setTimeout(() => {
+        window.location.href = url.href;
+      }, 360);
+    });
+
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) loader.classList.remove("is-active", "is-leaving");
+    });
+  }
+
   function bindCookieBanner() {
     const key = `${(config.companyName || "site").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-cookie-choice`;
     if (localStorage.getItem(key)) return;
@@ -151,6 +233,77 @@
       }
       form.reset();
     });
+  }
+
+  function prepareMotionTargets() {
+    const groups = [
+      [".service-grid", ".service-card"],
+      [".process-grid", ".process-card"],
+      [".service-carousel", ".service-slide"],
+      [".feature-list", "article"],
+      [".footer-faq-list", "details"],
+      [".related-grid", "a"],
+      [".check-list", "li"],
+      [".process-list", "article"],
+      [".system-steps", "div"],
+      [".symptom-lines", "p"],
+      [".services-orientation-lines", "p"],
+      [".services-cycle-steps", "p"],
+      [".footer-cta-list", "li"],
+      [".homeowner-notes", "p"]
+    ];
+    const leftTargets = [
+      ".about-content",
+      ".editorial-copy",
+      ".system-intro",
+      ".decision-lead",
+      ".services-orientation-copy",
+      ".services-cycle-copy",
+      ".footer-faq-head",
+      ".footer-cta-copy",
+      ".service-sidebar"
+    ];
+    const rightTargets = [
+      ".decision-text",
+      ".homeowner-quote",
+      ".contact-form-card",
+      ".contact-cards",
+      ".content-block",
+      ".footer-cta-action"
+    ];
+    const imageTargets = [
+      ".about-image",
+      ".about-visual-image",
+      ".editorial-image",
+      ".homeowner-photo",
+      ".cost-image",
+      ".services-cycle-image",
+      ".service-main .image-text img",
+      ".footer-cta-team"
+    ];
+
+    groups.forEach(([containerSelector, itemSelector]) => {
+      $$(containerSelector).forEach((container) => {
+        $$(itemSelector, container).forEach((item, index) => {
+          item.classList.add("reveal");
+          item.style.setProperty("--delay", `${Math.min(index * 95, 570)}ms`);
+        });
+      });
+    });
+
+    leftTargets.forEach((selector) => {
+      $$(selector).forEach((el) => el.classList.add("reveal", "reveal-left"));
+    });
+
+    rightTargets.forEach((selector) => {
+      $$(selector).forEach((el) => el.classList.add("reveal", "reveal-right"));
+    });
+
+    imageTargets.forEach((selector) => {
+      $$(selector).forEach((el) => el.classList.add("reveal", "reveal-image"));
+    });
+
+    $$(".section-kicker").forEach((el) => el.classList.add("reveal", "reveal-kicker"));
   }
 
   function bindReveals() {
@@ -292,11 +445,13 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    bindPageLoader();
     hydrateConfigTargets();
     bindNavigation();
     bindScrollTop();
     bindCookieBanner();
     bindContactForm();
+    prepareMotionTargets();
     bindReveals();
     bindCounters();
     bindImageTilt();

@@ -107,6 +107,16 @@ textarea {
   width: 34px;
   height: 2px;
   background: currentColor;
+  transform-origin: left center;
+  transition: transform 0.62s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.section-kicker.reveal-kicker::before {
+  transform: scaleX(0);
+}
+
+.section-kicker.reveal-kicker.is-visible::before {
+  transform: scaleX(1);
 }
 
 h1,
@@ -779,14 +789,16 @@ button.btn::after,
 .page-hero-content.reveal {
   opacity: 1;
   transform: none;
-  animation: slideinup 0.8s ease both;
+  animation: slideinup 0.86s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 @keyframes slideinup {
   from {
-    transform: translateY(26px);
+    opacity: 0;
+    transform: translateY(28px);
   }
   to {
+    opacity: 1;
     transform: translateY(0);
   }
 }
@@ -2145,6 +2157,229 @@ details p {
   gap: 18px;
 }
 
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(12, 27, 22, 0.98), rgba(25, 68, 52, 0.96)),
+    var(--green-dark);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(0);
+  transition:
+    opacity 0.32s ease,
+    visibility 0.32s ease,
+    transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.page-loader.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.page-loader:not(.is-active) {
+  transform: translateY(-14px);
+}
+
+.page-loader.is-leaving {
+  transform: translateY(0);
+}
+
+.loader-stack {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  width: 168px;
+  transform: translateY(-4px);
+}
+
+.loader-house {
+  width: 132px;
+  height: 112px;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 22px 30px rgba(0, 0, 0, 0.28));
+}
+
+.loader-house svg {
+  width: 132px;
+  height: 112px;
+  display: block;
+  overflow: visible;
+}
+
+.loader-house-shadow {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 5;
+  stroke-linecap: round;
+  animation: loaderShadow 1.55s ease-in-out infinite;
+}
+
+.loader-house-body {
+  fill: #143f31;
+  transform-origin: 66px 96px;
+  animation: loaderFacade 1.55s cubic-bezier(0.18, 0.84, 0.22, 1) infinite;
+}
+
+.loader-house-side {
+  fill: #0d2f25;
+  transform-origin: 66px 96px;
+  animation: loaderFacade 1.55s cubic-bezier(0.18, 0.84, 0.22, 1) infinite;
+  animation-delay: 0.06s;
+}
+
+.loader-house-roof {
+  fill: #e99a25;
+  transform-origin: 66px 12px;
+  animation: loaderRoof 1.55s cubic-bezier(0.18, 0.84, 0.22, 1) infinite;
+}
+
+.loader-house-trim {
+  fill: none;
+  stroke: #f2c16d;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 150;
+  stroke-dashoffset: 150;
+  animation: loaderTrim 1.55s ease-in-out infinite;
+}
+
+.loader-siding path {
+  fill: none;
+  stroke: #f7f2e7;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 16;
+  stroke-dashoffset: 16;
+  opacity: 0;
+  animation: loaderSiding 1.55s ease-in-out infinite;
+}
+
+.loader-siding-left path:nth-child(1),
+.loader-siding-right path:nth-child(1) {
+  animation-delay: 0.24s;
+}
+
+.loader-siding-left path:nth-child(2),
+.loader-siding-right path:nth-child(2) {
+  animation-delay: 0.34s;
+}
+
+.loader-siding-left path:nth-child(3),
+.loader-siding-right path:nth-child(3) {
+  animation-delay: 0.44s;
+}
+
+.loader-sweep {
+  position: relative;
+  width: 156px;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.loader-sweep span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 52px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, var(--amber), transparent);
+  animation: loaderSweep 1.1s ease-in-out infinite;
+}
+
+@keyframes loaderFacade {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: translateY(5px) scale(0.965);
+  }
+  32%,
+  72% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes loaderRoof {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translateY(-8px);
+  }
+  30%,
+  74% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes loaderTrim {
+  0% {
+    stroke-dashoffset: 150;
+    opacity: 0;
+  }
+  32%,
+  76% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -150;
+    opacity: 0;
+  }
+}
+
+@keyframes loaderSiding {
+  0% {
+    stroke-dashoffset: 16;
+    opacity: 0;
+  }
+  34%,
+  72% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -16;
+    opacity: 0;
+  }
+}
+
+@keyframes loaderSweep {
+  0% {
+    transform: translateX(-58px);
+  }
+  50% {
+    transform: translateX(162px);
+  }
+  100% {
+    transform: translateX(-58px);
+  }
+}
+
+@keyframes loaderShadow {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scaleX(0.82);
+  }
+  42%,
+  72% {
+    opacity: 0.7;
+    transform: scaleX(1);
+  }
+}
+
 .cookie-banner {
   position: fixed;
   left: 50%;
@@ -2282,14 +2517,76 @@ details p {
 }
 
 .reveal {
-  opacity: 1;
-  transform: translateY(18px);
-  transition: transform 0.65s ease;
+  opacity: 0;
+  filter: blur(7px);
+  transform: translate3d(0, 46px, 0);
+  transition:
+    opacity 0.82s ease,
+    filter 0.82s ease,
+    transform 0.82s cubic-bezier(0.18, 0.84, 0.22, 1);
   transition-delay: var(--delay, 0ms);
+  will-change: opacity, filter, transform;
+}
+
+.reveal-left {
+  transform: translate3d(-54px, 0, 0);
+}
+
+.reveal-right {
+  transform: translate3d(54px, 0, 0);
+}
+
+.reveal-image {
+  clip-path: inset(0 0 18% 0);
+  transform: translate3d(0, 38px, 0) scale(0.965);
+  transition:
+    opacity 0.9s ease,
+    filter 0.9s ease,
+    clip-path 1s cubic-bezier(0.18, 0.84, 0.22, 1),
+    transform 1s cubic-bezier(0.18, 0.84, 0.22, 1);
 }
 
 .reveal.is-visible {
-  transform: translateY(0);
+  opacity: 1;
+  filter: blur(0);
+  transform: translate3d(0, 0, 0);
+  clip-path: inset(0);
+  will-change: auto;
+}
+
+.service-card.reveal,
+.service-slide.reveal,
+.process-card.reveal,
+.footer-faq-list details.reveal,
+.related-grid a.reveal,
+.content-block.reveal {
+  transform: translate3d(0, 52px, 0) scale(0.97);
+}
+
+.service-card.reveal.is-visible,
+.service-slide.reveal.is-visible,
+.process-card.reveal.is-visible,
+.footer-faq-list details.reveal.is-visible,
+.related-grid a.reveal.is-visible,
+.content-block.reveal.is-visible {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.service-card.reveal.is-visible:hover {
+  transform: translateY(-8px) scale(1);
+}
+
+.service-slide.reveal.is-visible:hover {
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.service-slide.reveal.is-visible a:hover,
+.related-grid a.reveal.is-visible:hover {
+  transform: translateY(-4px);
+}
+
+.process-card.reveal.is-visible:hover {
+  transform: translateY(-7px) scale(1);
 }
 
 @media (max-width: 1320px) {
